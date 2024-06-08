@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
-const port = 3000
+const port = 3000;
 const io = new Server(port, {
     cors: {
-        origin: ["http://127.0.0.1:5500"]
+        origin: ["*"]
     }
 });
 
