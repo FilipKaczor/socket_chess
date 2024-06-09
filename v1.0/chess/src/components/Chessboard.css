@@ -8,11 +8,3 @@
     overflow: hidden;
     border-radius: 10px;
 }
-
-#chessboard .color-box {
-    background-color: #314949;
-}
-
-#chessboard .white-box {
-    background-color: #ebecd0;
-}

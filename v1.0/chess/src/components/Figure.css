@@ -1,0 +1,19 @@
+.figure {
+    display: grid;
+    width: 100px;
+    height: 100px;
+    place-content: center;
+}
+
+.figure img {
+    width: 80px;
+    color: white;
+}
+
+.color-box {
+    background-color: #314949;
+}
+
+.white-box {
+    background-color: #ebecd0;
+}
