@@ -1,5 +1,18 @@
 #chessboard {
+    display: grid;
+    grid-template-rows: repeat(8,100px);
+    grid-template-columns: repeat(8,100px);
     width: 800px;
     height: 800px;
+    background-color: black;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+#chessboard .color-box {
     background-color: #314949;
+}
+
+#chessboard .white-box {
+    background-color: #ebecd0;
 }
