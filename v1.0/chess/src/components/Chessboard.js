@@ -15,25 +15,21 @@ for(let i=0; i<8; i++) {
     pieces.push(new Piece("images/pawn_b.png", i, 6)); 
     pieces.push(new Piece("images/pawn_w.png", i, 1))
 }
-// Black pieces on chessboard
-pieces.push(new Piece("images/rook_b.png", 0, 7))
-pieces.push(new Piece("images/rook_b.png", 7, 7))
-pieces.push(new Piece("images/knight_b.png", 1, 7))
-pieces.push(new Piece("images/knight_b.png", 6, 7))
-pieces.push(new Piece("images/bishop_b.png", 2, 7))
-pieces.push(new Piece("images/bishop_b.png", 5, 7))
-pieces.push(new Piece("images/queen_b.png", 3, 7))
-pieces.push(new Piece("images/king_b.png", 4, 7))
+for(let i=0; i<2; i++)
+{
+    const type = (i===0) ? 'b':'w';
+    const num = (i===0) ? 7:0;
 
-// White pieces on chessboard
-pieces.push(new Piece("images/rook_w.png", 0, 0))
-pieces.push(new Piece("images/rook_w.png", 7, 0))
-pieces.push(new Piece("images/knight_w.png", 1, 0))
-pieces.push(new Piece("images/knight_w.png", 6, 0))
-pieces.push(new Piece("images/bishop_w.png", 2, 0))
-pieces.push(new Piece("images/bishop_w.png", 5, 0))
-pieces.push(new Piece("images/queen_w.png", 3, 0))
-pieces.push(new Piece("images/king_w.png", 4, 0))
+    pieces.push(new Piece(`images/rook_${type}.png`, 0, num));
+    pieces.push(new Piece(`images/rook_${type}.png`, 7, num));
+    pieces.push(new Piece(`images/knight_${type}.png`, 1, num));
+    pieces.push(new Piece(`images/knight_${type}.png`, 6, num));
+    pieces.push(new Piece(`images/bishop_${type}.png`, 2, num));
+    pieces.push(new Piece(`images/bishop_${type}.png`, 5, num));
+    pieces.push(new Piece(`images/queen_${type}.png`, 3, num));
+    pieces.push(new Piece(`images/king_${type}.png`, 4, num));
+
+}
 
 console.log(pieces);
 
