@@ -57,6 +57,7 @@ io.on("connection", (socket) => {
             console.log(lobbies)
             socket.emit(`to-game-room`, socket.id, lobbyData)
             socket.join(lobbyName)
+            io.to(lobbyName).emit('full-room', lobbyData);
         }
         if (!foundRoom) {
             socket.emit(`error-lobby-not-exists`, socket.id)
