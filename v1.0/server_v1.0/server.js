@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 const port = 3000;
+let board = [[]];
 const io = new Server(port, {
     cors: {
         origin: ["*"]

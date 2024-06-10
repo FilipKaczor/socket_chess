@@ -6,12 +6,13 @@ import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
 
 // Server connection
 const socket = io("/")
-let name = ''
+let player_id = ''
+let player_number = null
 
 socket.on('connect', () => {
     console.log(socket.id)
-    name = socket.id
-    document.getElementById("playerId").innerText = `player_id: ${name}`
+    player_id = socket.id
+    document.getElementById("playerId").innerText = `player_id: ${player_id}`
 
 })
 
@@ -30,7 +31,7 @@ document.getElementById("form").addEventListener('submit', (e) => {
 })
 
 socket.on('to-game-room', (clientId, roomInfo) => {
-    if (name === clientId) {
+    if (player_id === clientId) {
         // console.log(`in room: ${roomInfo}`)
         document.getElementById("roomName").innerText = `room: ${roomInfo.lobbyName}`
         document.getElementById("newRoom").value = ''
@@ -43,36 +44,39 @@ socket.on('to-game-room', (clientId, roomInfo) => {
 })
 
 socket.on('full-room', (lobbyData) => {
-    console.log('Room is full:', lobbyData);
+    player_number = (lobbyData.p1 === player_id) ? 1:2;
+    console.log(player_number);
 
     document.getElementsByClassName('main-container')[0].style.display = 'none';
+    document.getElementById('root').style.display = "block";
 });
 
 socket.on('error-lobby-exists', (clientId) => {
-    if (name === clientId) {
+    if (player_id === clientId) {
         alert('lobby exists, try different lobby name')
         document.getElementById("newRoom").value = ''
     }
 })
 
 socket.on('error-lobby-not-exists', (clientId) => {
-    if (name === clientId) {
+    if (player_id === clientId) {
         alert('lobby does not exist, try different lobby name')
         document.getElementById("joinRoom").value = ''
     }
 })
 
 socket.on('error-lobby-full', (clientId) => {
-    if (name === clientId) {
+    if (player_id === clientId) {
         alert('lobby is full, try different lobby')
         document.getElementById("joinRoom").value = ''
     }
 })
 
+//Page resources
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Chessboard />
+    <Chessboard player_number={player_number}/>
   </React.StrictMode>
 );
