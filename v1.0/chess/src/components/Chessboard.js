@@ -167,12 +167,27 @@ function Chessboard(props) {
 
       const x = e.clientX;
       const y = e.clientY;
+      const elementUnderFigure = document.elementFromPoint(x, y);
+
+      const pomX = Math.floor(
+        (e.clientY - chessboardRef.current.offsetTop) / 100
+      );
+      const pomY = Math.floor(
+        (e.clientX - chessboardRef.current.offsetLeft) / 100
+      );
 
       console.log(startX, startY);
+      console.log(pomX, pomY);
       console.log(getBoard);
-      console.log(getBoard[startX][startY]);
 
-      const elementUnderFigure = document.elementFromPoint(x, y);
+      const pomFigure = getBoard[startX][startY];
+      const newBoard = [...getBoard]; // Create a copy of the current state
+      newBoard[pomX][pomY] = pomFigure; // Update the nested array
+      newBoard[startX][startY] = ""; // Clear the previous position
+      setBoard(newBoard); // Set the new state
+
+      console.log(getBoard);
+
       console.log("Element underneath: ", elementUnderFigure);
       console.log(e.target);
 
