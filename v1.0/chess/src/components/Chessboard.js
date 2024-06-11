@@ -22,6 +22,8 @@ function Chessboard(props) {
   let activeFigure = null;
   let startX = null;
   let startY = null;
+  let startingX = null;
+  let startingY = null;
 
   const [getBoard, setBoard] = useState(initializeBoard());
 
@@ -38,75 +40,39 @@ function Chessboard(props) {
     //Definiowanie tablicy (inna dla gracza 1 i inna dla gracza 2)
     // if (props.player_number == 1) {
     for (let i = 0; i < 8; i++) {
-      pieces.push(new Piece("images/pawn_b.png", i, 6));
+      // pieces.push(new Piece("images/pawn_b.png", i, 6));
       firstRenderBoard[6][i] = "images/pawn_b.png";
-      pieces.push(new Piece("images/pawn_w.png", i, 1));
+      // pieces.push(new Piece("images/pawn_w.png", i, 1));
       firstRenderBoard[1][i] = "images/pawn_w.png";
     }
     for (let i = 0; i < 2; i++) {
       const type = i === 0 ? "b" : "w";
       const num = i === 0 ? 7 : 0;
 
-      pieces.push(new Piece(`images/rook_${type}.png`, 0, num));
+      // pieces.push(new Piece(`images/rook_${type}.png`, 0, num));
       firstRenderBoard[num][0] = `images/rook_${type}.png`;
 
-      pieces.push(new Piece(`images/rook_${type}.png`, 7, num));
+      // pieces.push(new Piece(`images/rook_${type}.png`, 7, num));
       firstRenderBoard[num][7] = `images/rook_${type}.png`;
 
-      pieces.push(new Piece(`images/knight_${type}.png`, 1, num));
+      // pieces.push(new Piece(`images/knight_${type}.png`, 1, num));
       firstRenderBoard[num][1] = `images/knight_${type}.png`;
 
-      pieces.push(new Piece(`images/knight_${type}.png`, 6, num));
+      // pieces.push(new Piece(`images/knight_${type}.png`, 6, num));
       firstRenderBoard[num][6] = `images/knight_${type}.png`;
 
-      pieces.push(new Piece(`images/bishop_${type}.png`, 2, num));
+      // pieces.push(new Piece(`images/bishop_${type}.png`, 2, num));
       firstRenderBoard[num][2] = `images/bishop_${type}.png`;
 
-      pieces.push(new Piece(`images/bishop_${type}.png`, 5, num));
+      // pieces.push(new Piece(`images/bishop_${type}.png`, 5, num));
       firstRenderBoard[num][5] = `images/bishop_${type}.png`;
 
-      pieces.push(new Piece(`images/queen_${type}.png`, 3, num));
+      // pieces.push(new Piece(`images/queen_${type}.png`, 3, num));
       firstRenderBoard[num][3] = `images/queen_${type}.png`;
 
-      pieces.push(new Piece(`images/king_${type}.png`, 4, num));
+      // pieces.push(new Piece(`images/king_${type}.png`, 4, num));
       firstRenderBoard[num][4] = `images/king_${type}.png`;
     }
-    // } else {
-    //   for (let i = 0; i < 8; i++) {
-    //     pieces.push(new Piece("images/pawn_b.png", i, 1));
-    //     firstRenderBoard[1][i] = "images/pawn_b.png";
-    //     pieces.push(new Piece("images/pawn_w.png", i, 6));
-    //     firstRenderBoard[6][i] = "images/pawn_w.png";
-    //   }
-    //   for (let i = 0; i < 2; i++) {
-    //     const type = i === 0 ? "w" : "b";
-    //     const num = i === 0 ? 7 : 0;
-
-    //     pieces.push(new Piece(`images/rook_${type}.png`, 0, num));
-    //     firstRenderBoard[num][0] = `images/rook_${type}.png`;
-
-    //     pieces.push(new Piece(`images/rook_${type}.png`, 7, num));
-    //     firstRenderBoard[num][7] = `images/rook_${type}.png`;
-
-    //     pieces.push(new Piece(`images/knight_${type}.png`, 1, num));
-    //     firstRenderBoard[num][1] = `images/knight_${type}.png`;
-
-    //     pieces.push(new Piece(`images/knight_${type}.png`, 6, num));
-    //     firstRenderBoard[num][6] = `images/knight_${type}.png`;
-
-    //     pieces.push(new Piece(`images/bishop_${type}.png`, 2, num));
-    //     firstRenderBoard[num][2] = `images/bishop_${type}.png`;
-
-    //     pieces.push(new Piece(`images/bishop_${type}.png`, 5, num));
-    //     firstRenderBoard[num][5] = `images/bishop_${type}.png`;
-
-    //     pieces.push(new Piece(`images/queen_${type}.png`, 3, num));
-    //     firstRenderBoard[num][3] = `images/queen_${type}.png`;
-
-    //     pieces.push(new Piece(`images/king_${type}.png`, 4, num));
-    //     firstRenderBoard[num][4] = `images/king_${type}.png`;
-    //   }
-    // }
 
     return firstRenderBoard;
   }
@@ -114,16 +80,24 @@ function Chessboard(props) {
   function grabFigure(e) {
     let element = e.target;
 
+    console.log(element);
+
     if (props.player_number === 1) {
+      startY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
       startX =
         7 - Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
-      startY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
     } else {
       startX = Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
-      startY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
+      startY =
+        7 - Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
     }
 
     if (element.classList.contains("chesspiece")) {
+      const rect = element.getBoundingClientRect();
+      startingX = rect.left;
+      startingY = rect.top;
+      console.log("StartingX: ", startingX, " StartingY: ", startingY);
+
       const x = e.clientX - 50;
       const y = e.clientY - 50;
       element.style.position = "absolute";
@@ -165,34 +139,43 @@ function Chessboard(props) {
     if (activeFigure) {
       activeFigure.style.pointerEvents = "none";
 
+      let pomX = null;
+      let pomY = null;
       const x = e.clientX;
       const y = e.clientY;
       const elementUnderFigure = document.elementFromPoint(x, y);
 
-      const pomX = Math.floor(
-        (e.clientY - chessboardRef.current.offsetTop) / 100
-      );
-      const pomY = Math.floor(
-        (e.clientX - chessboardRef.current.offsetLeft) / 100
-      );
+      if (props.player_number === 2) {
+        pomX = Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
+        pomY =
+          7 - Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
+      } else {
+        pomX =
+          7 - Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
+        pomY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
+      }
 
-      console.log(startX, startY);
-      console.log(pomX, pomY);
-      console.log(getBoard);
+      // console.log(startX, startY);
+      console.log(elementUnderFigure);
+      // console.log(pomX, pomY);
 
-      const pomFigure = getBoard[startX][startY];
-      const newBoard = [...getBoard]; // Create a copy of the current state
-      newBoard[pomX][pomY] = pomFigure; // Update the nested array
-      newBoard[startX][startY] = ""; // Clear the previous position
-      setBoard(newBoard); // Set the new state
-
-      console.log(getBoard);
-
-      console.log("Element underneath: ", elementUnderFigure);
-      console.log(e.target);
+      if (
+        elementUnderFigure.childNodes.length > 0 ||
+        elementUnderFigure.classList.contains("chesspiece")
+      ) {
+        console.log("Obraz pod elementem");
+        activeFigure.style.left = `${startingX}px`;
+        activeFigure.style.top = `${startingY}px`;
+      } else {
+        const pomFigure = getBoard[startX][startY];
+        const newBoard = [...getBoard];
+        newBoard[pomX][pomY] = pomFigure;
+        newBoard[startX][startY] = "";
+        setBoard(newBoard);
+      }
+      // console.log(e.target);
 
       activeFigure.style.pointerEvents = "";
-
       activeFigure = null;
     }
   }
