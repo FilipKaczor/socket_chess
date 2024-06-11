@@ -65,8 +65,8 @@ io.on("connection", (socket) => {
     foundRoom = false;
   });
 
-  socket.on("test", () => {
-    console.log("test");
+  socket.on("chessboard", (board) => {
+    console.log(board);
   });
 });
 

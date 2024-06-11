@@ -137,8 +137,6 @@ function Chessboard(props) {
   }
 
   function dropFigure(e) {
-    socket.emit("test");
-
     if (activeFigure) {
       activeFigure.style.pointerEvents = "none";
 
@@ -176,7 +174,8 @@ function Chessboard(props) {
         newBoard[startX][startY] = "";
         setBoard(newBoard);
       }
-      // console.log(e.target);
+      console.log(getBoard);
+      socket.emit("chessboard", getBoard);
 
       activeFigure.style.pointerEvents = "";
       activeFigure = null;
