@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Figure from "../components/Figure";
 import "../components/Chessboard.css";
+import socket from "../index.js";
 
 class Piece {
   constructor(image, x, y) {
@@ -136,6 +137,8 @@ function Chessboard(props) {
   }
 
   function dropFigure(e) {
+    socket.emit("test");
+
     if (activeFigure) {
       activeFigure.style.pointerEvents = "none";
 

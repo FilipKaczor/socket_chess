@@ -78,3 +78,12 @@ socket.on("error-lobby-full", (clientId) => {
     document.getElementById("joinRoom").value = "";
   }
 });
+
+// const root = ReactDOM.createRoot(document.getElementById("root"));
+// root.render(
+//   <React.StrictMode>
+//     <App player_number={1} />
+//   </React.StrictMode>
+// );
+
+export default socket;
