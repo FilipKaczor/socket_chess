@@ -13,6 +13,7 @@ console.log(`lobbies: ${lobbies}`);
 
 io.on("connection", (socket) => {
   console.log(`connected ${socket.id}`);
+  let lastLobbyName = null;
 
   socket.on("join-new-lobby", (lobbyName) => {
     let lobbyExists = false;
@@ -28,6 +29,7 @@ io.on("connection", (socket) => {
       console.log(lobbies);
       socket.emit(`to-game-room`, socket.id, lobbyData);
       socket.join(lobbyName);
+      lastLobbyName = lobbyName;
     } else {
       socket.emit(`error-lobby-exists`, socket.id);
     }
@@ -48,6 +50,7 @@ io.on("connection", (socket) => {
           lobbies[i].p2 = socket.id;
           foundRoom = true;
           lobbyData = lobbies[i];
+          lastLobbyName = lobbyName;
         }
         return;
       }
@@ -65,8 +68,12 @@ io.on("connection", (socket) => {
     foundRoom = false;
   });
 
+  // Przesyłanie aktualnej tablicy do graczy w danym lobby
+
   socket.on("chessboard", (board) => {
     console.log(board);
+    io.to(lastLobbyName).emit("chessboard-refresh", board);
+    // io.emit("chessboard-refresh", board);
   });
 });
 
