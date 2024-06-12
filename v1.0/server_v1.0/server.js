@@ -71,9 +71,13 @@ io.on("connection", (socket) => {
   // Przesyłanie aktualnej tablicy do graczy w danym lobby
 
   socket.on("chessboard", (board) => {
-    console.log(board);
     io.to(lastLobbyName).emit("chessboard-refresh", board);
-    // io.emit("chessboard-refresh", board);
+  });
+
+  // Aktualizowanie informacji kogo aktualnie jest tura
+
+  socket.on("turn-change", (turn) => {
+    io.to(lastLobbyName).emit("turn-refresh", turn + 1);
   });
 });
 

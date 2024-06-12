@@ -27,6 +27,7 @@ function Chessboard(props) {
   let startingY = null;
 
   const [getBoard, setBoard] = useState(initializeBoard());
+  const [getTurn, setTurn] = useState(0); // okreslenie kto ma teraz ture
 
   function initializeBoard() {
     let firstRenderBoard = [[]];
@@ -89,7 +90,11 @@ function Chessboard(props) {
     }
 
     if (figureColor != undefined) {
-      if (props.player_number === 1 && figureColor[1] === "w") {
+      if (
+        props.player_number === 1 &&
+        figureColor[1] === "w" &&
+        getTurn % 2 === 0
+      ) {
         startY = Math.floor(
           (e.clientX - chessboardRef.current.offsetLeft) / 100
         );
@@ -109,7 +114,11 @@ function Chessboard(props) {
 
           activeFigure = element;
         }
-      } else if (props.player_number === 2 && figureColor[1] === "b") {
+      } else if (
+        props.player_number === 2 &&
+        figureColor[1] === "b" &&
+        getTurn % 2 === 1
+      ) {
         startX = Math.floor(
           (e.clientY - chessboardRef.current.offsetTop) / 100
         );
@@ -499,12 +508,15 @@ function Chessboard(props) {
           cond) ||
         (elementUnderFigure.classList.contains("figure") && cond)
       ) {
-        console.log("udane");
+        // console.log("udane");
         const pomFigure = getBoard[startX][startY];
         const newBoard = [...getBoard];
         newBoard[pomX][pomY] = pomFigure;
         newBoard[startX][startY] = "";
         setBoard(newBoard);
+
+        //Zamiana tury pomiedzy graczami
+        socket.emit("turn-change", getTurn);
       } else {
         activeFigure.style.left = `${startingX}px`;
         activeFigure.style.top = `${startingY}px`;
@@ -520,6 +532,10 @@ function Chessboard(props) {
 
   socket.on("chessboard-refresh", (board) => {
     setBoard(board);
+  });
+
+  socket.on("turn-refresh", (turn) => {
+    setTurn(turn);
   });
 
   let board = [];
