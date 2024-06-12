@@ -3,15 +3,15 @@ import Figure from "../components/Figure";
 import "../components/Chessboard.css";
 import socket from "../index.js";
 
-class Piece {
-  constructor(image, x, y) {
-    this.image = image;
-    this.x = x;
-    this.y = y;
-  }
-}
+// class Piece {
+//   constructor(image, x, y) {
+//     this.image = image;
+//     this.x = x;
+//     this.y = y;
+//   }
+// }
 
-const pieces = [];
+// const pieces = [];
 
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -80,32 +80,57 @@ function Chessboard(props) {
 
   function grabFigure(e) {
     let element = e.target;
-
-    console.log(element);
-
-    if (props.player_number === 1) {
-      startY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
-      startX =
-        7 - Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
-    } else {
-      startX = Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
-      startY =
-        7 - Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
-    }
+    let figureColor = null;
 
     if (element.classList.contains("chesspiece")) {
-      const rect = element.getBoundingClientRect();
-      startingX = rect.left;
-      startingY = rect.top;
-      console.log("StartingX: ", startingX, " StartingY: ", startingY);
+      figureColor = element.style.backgroundImage.split("/")[1];
+      figureColor = figureColor.split(".")[0];
+      figureColor = figureColor.split("_");
+    }
 
-      const x = e.clientX - 50;
-      const y = e.clientY - 50;
-      element.style.position = "absolute";
-      element.style.left = `${x}px`;
-      element.style.top = `${y}px`;
+    if (figureColor != undefined) {
+      if (props.player_number === 1 && figureColor[1] === "w") {
+        startY = Math.floor(
+          (e.clientX - chessboardRef.current.offsetLeft) / 100
+        );
+        startX =
+          7 - Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
+        if (element.classList.contains("chesspiece")) {
+          const rect = element.getBoundingClientRect();
+          startingX = rect.left;
+          startingY = rect.top;
+          console.log("StartingX: ", startingX, " StartingY: ", startingY);
 
-      activeFigure = element;
+          const x = e.clientX - 50;
+          const y = e.clientY - 50;
+          element.style.position = "absolute";
+          element.style.left = `${x}px`;
+          element.style.top = `${y}px`;
+
+          activeFigure = element;
+        }
+      } else if (props.player_number === 2 && figureColor[1] === "b") {
+        startX = Math.floor(
+          (e.clientY - chessboardRef.current.offsetTop) / 100
+        );
+        startY =
+          7 - Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
+
+        if (element.classList.contains("chesspiece")) {
+          const rect = element.getBoundingClientRect();
+          startingX = rect.left;
+          startingY = rect.top;
+          console.log("StartingX: ", startingX, " StartingY: ", startingY);
+
+          const x = e.clientX - 50;
+          const y = e.clientY - 50;
+          element.style.position = "absolute";
+          element.style.left = `${x}px`;
+          element.style.top = `${y}px`;
+
+          activeFigure = element;
+        }
+      }
     }
   }
 
@@ -140,6 +165,7 @@ function Chessboard(props) {
     if (activeFigure) {
       activeFigure.style.pointerEvents = "none";
 
+      let cond = false;
       let pomX = null;
       let pomY = null;
       const x = e.clientX;
@@ -157,12 +183,105 @@ function Chessboard(props) {
       }
 
       console.log(startX, startY);
-      console.log(elementUnderFigure);
-      console.log(pomX, pomY);
+      // console.log(elementUnderFigure);
+      // console.log(pomX, pomY);
+      let figureColor = activeFigure.style.backgroundImage.split("/")[1];
+      figureColor = figureColor.split(".")[0];
+      figureColor = figureColor.split("_");
+      console.log(Math.abs(pomX - startX));
+
+      if (figureColor[0] === "pawn") {
+        if (startX - pomX === 2 && startX === 6) {
+          cond = true;
+        } else if (startX - pomX === 1) {
+          cond = true;
+        } else cond = false;
+      } else if (figureColor[0] === "rook") {
+        if (startX === pomX) {
+          cond = true;
+          if (pomY > startY) {
+            for (let i = 1; i < Math.abs(pomY - startY); i += 1) {
+              let elementUnderFigureRook = document.elementFromPoint(
+                x + i * 100,
+                y
+              );
+              if (
+                elementUnderFigureRook.childNodes.length > 0 ||
+                elementUnderFigureRook.classList.contains("chesspiece")
+              ) {
+                cond = false;
+              }
+            }
+          } else if (pomY < startY) {
+            for (let i = 1; i < Math.abs(pomY - startY); i += 1) {
+              let elementUnderFigureRook = document.elementFromPoint(
+                x - i * 100,
+                y
+              );
+              if (
+                elementUnderFigureRook.childNodes.length > 0 ||
+                elementUnderFigureRook.classList.contains("chesspiece")
+              ) {
+                cond = false;
+              }
+            }
+          }
+        } else if (startY === pomY) {
+          cond = true;
+          if (pomX > startX) {
+            for (let i = 1; i < Math.abs(pomX - startX); i += 1) {
+              let elementUnderFigureRook = document.elementFromPoint(
+                x,
+                y - i * 100
+              );
+              console.log(elementUnderFigureRook);
+              if (
+                elementUnderFigureRook.childNodes.length > 0 ||
+                elementUnderFigureRook.classList.contains("chesspiece")
+              ) {
+                cond = false;
+              }
+            }
+          } else if (pomX < startX) {
+            for (let i = 1; i < Math.abs(pomX - startX); i += 1) {
+              let elementUnderFigureRook = document.elementFromPoint(
+                x,
+                y + i * 100
+              );
+              console.log(elementUnderFigureRook);
+              if (
+                elementUnderFigureRook.childNodes.length > 0 ||
+                elementUnderFigureRook.classList.contains("chesspiece")
+              ) {
+                cond = false;
+              }
+            }
+          }
+        } else {
+          cond = false;
+        }
+      } else if (figureColor[0] === "knight") {
+        if (
+          (Math.abs(pomX - startX) === 2 && Math.abs(pomY - startY) === 1) ||
+          (Math.abs(pomX - startX) === 1 && Math.abs(pomY - startY) === 2)
+        ) {
+          cond = true;
+        } else cond = false;
+      } else if (figureColor[0] === "bishop") {
+        if (Math.abs(pomY - startY) === Math.abs(pomX - startX)) {
+          cond = true;
+        } else {
+          cond = false;
+        }
+      } else if (figureColor[0] === "queen") {
+      } else if (figureColor[0] === "king") {
+        
+      }
 
       if (
         elementUnderFigure.childNodes.length > 0 ||
-        elementUnderFigure.classList.contains("chesspiece")
+        elementUnderFigure.classList.contains("chesspiece") ||
+        cond === false
       ) {
         console.log("Obraz pod elementem");
         activeFigure.style.left = `${startingX}px`;
@@ -174,7 +293,7 @@ function Chessboard(props) {
         newBoard[startX][startY] = "";
         setBoard(newBoard);
       }
-      console.log(getBoard);
+      // console.log(getBoard);
       socket.emit("chessboard", getBoard);
 
       activeFigure.style.pointerEvents = "";
