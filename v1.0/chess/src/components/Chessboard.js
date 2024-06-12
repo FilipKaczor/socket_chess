@@ -183,9 +183,9 @@ function Chessboard(props) {
         pomY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
       }
 
-      // console.log(startX, startY);
-      // console.log(elementUnderFigure);
-      // console.log(pomX, pomY);
+      console.log(startX, startY);
+      console.log(elementUnderFigure);
+      console.log(pomX, pomY);
       let figureColor = activeFigure.style.backgroundImage.split("/")[1];
       figureColor = figureColor.split(".")[0];
       figureColor = figureColor.split("_");
@@ -198,10 +198,19 @@ function Chessboard(props) {
       }
       // console.log(Math.abs(pomX - startX));
 
+      if (props.player_number === 1) {
+        pomX = 7 - pomX;
+        startX = 7 - startX;
+        pomY = 7 - pomY;
+        startY = 7 - startY;
+      }
+
+      console.log(startX, startY, pomX, pomY);
+
       if (figureColor[0] === "pawn") {
-        if (startX - pomX === 2 && startX === 6) {
+        if (startX - pomX === 2 && startX === 6 && startY - pomY === 0) {
           cond = true;
-        } else if (startX - pomX === 1) {
+        } else if (startX - pomX === 1 && startY - pomY === 0) {
           cond = true;
         } else cond = false;
       } else if (figureColor[0] === "rook") {
@@ -471,7 +480,15 @@ function Chessboard(props) {
         } else cond = false;
       }
 
-      console.log(elementUnderFigure);
+      console.log(elementUnderFigure, cond);
+
+      if (props.player_number === 1) {
+        pomX = Math.abs(7 - pomX);
+        startX = Math.abs(7 - startX);
+        pomY = Math.abs(7 - pomY);
+        startY = Math.abs(7 - startY);
+      }
+      console.log(startX, startY, pomX, pomY);
 
       if (
         (props.player_number === 1 &&
@@ -482,6 +499,7 @@ function Chessboard(props) {
           cond) ||
         (elementUnderFigure.classList.contains("figure") && cond)
       ) {
+        console.log("udane");
         const pomFigure = getBoard[startX][startY];
         const newBoard = [...getBoard];
         newBoard[pomX][pomY] = pomFigure;
@@ -491,23 +509,7 @@ function Chessboard(props) {
         activeFigure.style.left = `${startingX}px`;
         activeFigure.style.top = `${startingY}px`;
       }
-      // if (
-      //   elementUnderFigure.childNodes.length > 0 ||
-      //   elementUnderFigure.classList.contains("chesspiece") ||
-      //   cond === false
-      // ) {
-      //   console.log("Obraz pod elementem");
-      //   console.log(elementUnderFigureColor);
-      //   activeFigure.style.left = `${startingX}px`;
-      //   activeFigure.style.top = `${startingY}px`;
-      // } else {
-      //   const pomFigure = getBoard[startX][startY];
-      //   const newBoard = [...getBoard];
-      //   newBoard[pomX][pomY] = pomFigure;
-      //   newBoard[startX][startY] = "";
-      //   setBoard(newBoard);
-      // }
-      // console.log(getBoard);
+
       socket.emit("chessboard", getBoard);
 
       activeFigure.style.pointerEvents = "";
