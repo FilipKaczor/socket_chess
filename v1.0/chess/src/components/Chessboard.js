@@ -89,7 +89,8 @@ function Chessboard(props) {
         7 - Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
     } else {
       startX = Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
-      startY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
+      startY =
+        7 - Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
     }
 
     if (element.classList.contains("chesspiece")) {
@@ -147,7 +148,8 @@ function Chessboard(props) {
 
       if (props.player_number === 2) {
         pomX = Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
-        pomY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
+        pomY =
+          7 - Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
       } else {
         pomX =
           7 - Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
@@ -191,7 +193,7 @@ function Chessboard(props) {
     for (let i = 0; i < horizontalAxis.length; i++) {
       const number = j + i + 2;
       let image =
-        props.player_number === 1 ? getBoard[j][i] : getBoard[7 - j][i];
+        props.player_number === 1 ? getBoard[j][i] : getBoard[7 - j][7 - i];
 
       board.push(<Figure image={image} number={number} key={`${j},${i}`} />);
     }
