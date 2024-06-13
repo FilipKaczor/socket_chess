@@ -192,9 +192,9 @@ function Chessboard(props) {
         pomY = Math.floor((e.clientX - chessboardRef.current.offsetLeft) / 100);
       }
 
-      console.log(startX, startY);
-      console.log(elementUnderFigure);
-      console.log(pomX, pomY);
+      // console.log(startX, startY);
+      // console.log(elementUnderFigure);
+      // console.log(pomX, pomY);
       let figureColor = activeFigure.style.backgroundImage.split("/")[1];
       figureColor = figureColor.split(".")[0];
       figureColor = figureColor.split("_");
@@ -214,12 +214,22 @@ function Chessboard(props) {
         startY = 7 - startY;
       }
 
-      console.log(startX, startY, pomX, pomY);
+      // console.log(startX, startY, pomX, pomY);
 
       if (figureColor[0] === "pawn") {
         if (startX - pomX === 2 && startX === 6 && startY - pomY === 0) {
           cond = true;
-        } else if (startX - pomX === 1 && startY - pomY === 0) {
+        } else if (
+          startX - pomX === 1 &&
+          startY - pomY === 0 &&
+          !elementUnderFigure.classList.contains("chesspiece")
+        ) {
+          cond = true;
+        } else if (
+          startX - pomX === 1 &&
+          Math.abs(startY - pomY) === 1 &&
+          elementUnderFigure.classList.contains("chesspiece")
+        ) {
           cond = true;
         } else cond = false;
       } else if (figureColor[0] === "rook") {
@@ -260,7 +270,7 @@ function Chessboard(props) {
                 x,
                 y - i * 100
               );
-              console.log(elementUnderFigureRook);
+              // console.log(elementUnderFigureRook);
               if (
                 elementUnderFigureRook.childNodes.length > 0 ||
                 elementUnderFigureRook.classList.contains("chesspiece")
@@ -274,7 +284,7 @@ function Chessboard(props) {
                 x,
                 y + i * 100
               );
-              console.log(elementUnderFigureRook);
+              // console.log(elementUnderFigureRook);
               if (
                 elementUnderFigureRook.childNodes.length > 0 ||
                 elementUnderFigureRook.classList.contains("chesspiece")
@@ -489,7 +499,7 @@ function Chessboard(props) {
         } else cond = false;
       }
 
-      console.log(elementUnderFigure, cond);
+      // console.log(elementUnderFigure, cond);
 
       if (props.player_number === 1) {
         pomX = Math.abs(7 - pomX);
@@ -497,7 +507,7 @@ function Chessboard(props) {
         pomY = Math.abs(7 - pomY);
         startY = Math.abs(7 - startY);
       }
-      console.log(startX, startY, pomX, pomY);
+      // console.log(startX, startY, pomX, pomY);
 
       if (
         (props.player_number === 1 &&
