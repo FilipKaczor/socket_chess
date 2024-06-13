@@ -551,14 +551,19 @@ function Chessboard(props) {
   }
 
   return (
-    <div
-      onMouseMove={(e) => moveFigure(e)}
-      onMouseDown={(e) => grabFigure(e)}
-      onMouseUp={(e) => dropFigure(e)}
-      id="chessboard"
-      ref={chessboardRef}
-    >
-      {board}
+    <div>
+      <div className="alert alert-primary turn-div" role="alert">
+        {getTurn % 2 === 0 ? "White turn" : "Black turn"}
+      </div>
+      <div
+        onMouseMove={(e) => moveFigure(e)}
+        onMouseDown={(e) => grabFigure(e)}
+        onMouseUp={(e) => dropFigure(e)}
+        id="chessboard"
+        ref={chessboardRef}
+      >
+        {board}
+      </div>
     </div>
   );
 }

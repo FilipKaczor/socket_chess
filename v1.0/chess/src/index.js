@@ -79,12 +79,12 @@ socket.on("error-lobby-full", (clientId) => {
   }
 });
 
-// const root = ReactDOM.createRoot(document.getElementById("root"));
-// console.log(player_number);
-// root.render(
-//   <React.StrictMode>
-//     <App player_number={1} />
-//   </React.StrictMode>
-// );
+const root = ReactDOM.createRoot(document.getElementById("root"));
+console.log(player_number);
+root.render(
+  <React.StrictMode>
+    <App player_number={1} />
+  </React.StrictMode>
+);
 
 export default socket;
