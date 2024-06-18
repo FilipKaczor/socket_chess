@@ -181,6 +181,7 @@ function Chessboard(props) {
       const y = e.clientY;
       const elementUnderFigure = document.elementFromPoint(x, y);
       let elementUnderFigureColor = null;
+      let elementUnderFigurePiece = null;
 
       if (props.player_number === 2) {
         pomX = Math.floor((e.clientY - chessboardRef.current.offsetTop) / 100);
@@ -203,7 +204,8 @@ function Chessboard(props) {
         elementUnderFigureColor =
           elementUnderFigure.style.backgroundImage.split("/")[1];
         elementUnderFigureColor = elementUnderFigureColor.split(".")[0];
-        elementUnderFigureColor = elementUnderFigureColor.split("_")[1];
+        [elementUnderFigurePiece, elementUnderFigureColor] =
+          elementUnderFigureColor.split("_");
       }
       // console.log(Math.abs(pomX - startX));
 
@@ -499,7 +501,9 @@ function Chessboard(props) {
         } else cond = false;
       }
 
-      // console.log(elementUnderFigure, cond);
+      if (pomX === startX && pomY === startY) {
+        cond = false;
+      }
 
       if (props.player_number === 1) {
         pomX = Math.abs(7 - pomX);
@@ -507,7 +511,6 @@ function Chessboard(props) {
         pomY = Math.abs(7 - pomY);
         startY = Math.abs(7 - startY);
       }
-      // console.log(startX, startY, pomX, pomY);
 
       if (
         (props.player_number === 1 &&
@@ -524,6 +527,15 @@ function Chessboard(props) {
         newBoard[pomX][pomY] = pomFigure;
         newBoard[startX][startY] = "";
         setBoard(newBoard);
+
+        if (elementUnderFigurePiece === "king") {
+          elementUnderFigureColor === "b"
+            ? alert("White won !!!")
+            : alert("Black won !!!");
+          setTimeout(function () {
+            window.location.reload();
+          }, 5000);
+        }
 
         //Zamiana tury pomiedzy graczami
         socket.emit("turn-change", getTurn);
