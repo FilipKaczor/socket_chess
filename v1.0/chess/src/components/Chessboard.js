@@ -552,16 +552,19 @@ function Chessboard(props) {
     }
   }
 
-  socket.on("chessboard-refresh", (board) => {
-    setBoard(board);
-  });
+  // socket.on("chessboard-refresh", (board) => {
+  //   console.log("1");
+  //   setBoard(board);
+  // });
 
-  socket.on("turn-refresh", (turn) => {
-    setTurn(turn);
-  });
+  // socket.on("turn-refresh", (turn) => {
+  //   console.log("2");
+  //   setTurn(turn);
+  // });
 
   // useEffect()
   useEffect(() => {
+    console.log("rerender");
     socket.on("game-end", (whoWon) => {
       console.log("test");
       whoWon === "b" ? alert("White won!!!") : alert("Black won !!!");
@@ -570,10 +573,22 @@ function Chessboard(props) {
       }, 5000);
     });
 
+    socket.on("turn-refresh", (turn) => {
+      console.log("2");
+      setTurn(turn);
+    });
+
+    socket.on("chessboard-refresh", (board) => {
+      console.log("1");
+      setBoard(board);
+    });
+
     return () => {
       socket.off("game-end");
+      socket.off("turn-refresh");
+      socket.off("chessboard-refresh");
     };
-  }, []);
+  }, [getTurn, getBoard]);
 
   let board = [];
 
