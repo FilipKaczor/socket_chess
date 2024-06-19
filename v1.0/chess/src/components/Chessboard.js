@@ -529,10 +529,10 @@ function Chessboard(props) {
         setBoard(newBoard);
 
         if (elementUnderFigurePiece === "king") {
+          socket.emit("game-end", elementUnderFigureColor);
           elementUnderFigureColor === "b"
             ? alert("White won !!!")
             : alert("Black won !!!");
-          socket.emit("game-end", elementUnderFigureColor);
           setTimeout(function () {
             window.location.reload();
           }, 5000);
