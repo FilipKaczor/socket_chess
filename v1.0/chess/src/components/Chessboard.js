@@ -532,6 +532,7 @@ function Chessboard(props) {
           elementUnderFigureColor === "b"
             ? alert("White won !!!")
             : alert("Black won !!!");
+          socket.emit("game-end", elementUnderFigureColor);
           setTimeout(function () {
             window.location.reload();
           }, 5000);
@@ -550,7 +551,6 @@ function Chessboard(props) {
       activeFigure = null;
     }
   }
-  // useEffect()
 
   socket.on("chessboard-refresh", (board) => {
     setBoard(board);
@@ -559,6 +559,21 @@ function Chessboard(props) {
   socket.on("turn-refresh", (turn) => {
     setTurn(turn);
   });
+
+  // useEffect()
+  useEffect(() => {
+    socket.on("game-end", (whoWon) => {
+      console.log("test");
+      whoWon === "b" ? alert("White won!!!") : alert("Black won !!!");
+      setTimeout(function () {
+        window.location.reload();
+      }, 5000);
+    });
+
+    return () => {
+      socket.off("game-end");
+    };
+  }, []);
 
   let board = [];
 

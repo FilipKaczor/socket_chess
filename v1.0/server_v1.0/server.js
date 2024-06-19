@@ -79,6 +79,12 @@ io.on("connection", (socket) => {
   socket.on("turn-change", (turn) => {
     io.to(lastLobbyName).emit("turn-refresh", turn + 1);
   });
+
+  // Koniec gry
+
+  socket.on("game-end", (whoWon) => {
+    socket.to(lastLobbyName).emit("game-end", whoWon);
+  });
 });
 
 //wysylanie emita do konkretniego pokoju socket.to(room).emit("emit-name",obj)
